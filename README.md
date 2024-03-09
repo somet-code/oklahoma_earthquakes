@@ -10,11 +10,11 @@ Inspired by [Oklahoma Cooling Centers Python Project](https://github.com/alex-co
 * Folium
 
 ## First milestone:
-* Grab last 7 days of Oklahoma earthquakes as a static csv
+* Grab last <strike>7</strike> 30 days of Oklahoma earthquakes <strike>as a static csv</strike> DONE
   * Chioma
-* Read into pandas DataFrame
+* Read into pandas DataFrame DONE
   * Ruth/Amanda
-* Clean up?
+* Clean up
   * Ruth
 * Pipe into Folium
   * Crystal
