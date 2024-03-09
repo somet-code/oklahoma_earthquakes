@@ -8,3 +8,37 @@ Inspired by [Oklahoma Cooling Centers Python Project](https://github.com/alex-co
 * Requests
 * pandas
 * Folium
+
+## Project 
+
+```shell
+# ****** Mac Terminal ******
+# create virtual environment 
+python3 -m venv .venv
+# activate virtual environment
+source .venv/bin/activate
+# install dependencies
+python3 -m pip install -r requirements.txt
+# run script
+python3 makeMap.py
+# open map in browser
+open ./pages/index.html
+# deactivate virtual environment
+deactivate
+
+
+## ****** Windows ******
+```shell
+# create virtual environment 
+python -m venv .venv
+# activate virtual environment
+venv/bin/activate
+# install dependencies
+python -m pip install -r requirements.txt
+# run script
+python makeMap.py
+# open map in browser
+open ./pages/index.html
+# deactivate virtual environment
+deactivate
+```
