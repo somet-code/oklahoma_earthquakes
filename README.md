@@ -11,7 +11,12 @@ Inspired by [Oklahoma Cooling Centers Python Project](https://github.com/alex-co
 
 First milestone:
 * Grab last 7 days of Oklahoma earthquakes as a static csv
+  * Chioma
 * Read into pandas DataFrame
+  * Ruth/Amanda
 * Clean up?
+  * Ruth
 * Pipe into Folium
+  * Crystal
 * Deploy (Netlify? GitHub Pages? Render?)
+  * Crystal
