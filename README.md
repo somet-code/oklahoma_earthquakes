@@ -24,6 +24,7 @@ Inspired by [Oklahoma Cooling Centers Python Project](https://github.com/alex-co
   * Crystal
 
 ## Instructions
+
 * Install [Python3](https://www.python.org/downloads/)
 * Create a virtual environment and install dependencies
     ```shell
@@ -36,10 +37,40 @@ Inspired by [Oklahoma Cooling Centers Python Project](https://github.com/alex-co
     python3 make_map.py
     ```
 * Open the map in your browser
+  * macOS
     ```shell
     open ./pages/index.html
     ```
+  * Windows and Linux
+    * Double-click the `index.html` file in your file manager
 * Deactivate virtual environment
     ```shell
     deactivate
+    ```
+
+## Development
+
+### Setup
+
+* Follow the [instructions](#instructions) above to set up your environment
+* Install [devbox](https://www.jetpack.io/devbox/docs/quickstart/)
+    ```bash
+    curl -fsSL https://get.jetpack.io/devbox | bash
+    ```
+
+### Usage
+
+* Basic commands
+    ```bash
+    # install dependencies
+    devbox install
+
+    # enter devbox
+    devbox shell
+
+    # refresh devbox after making changes to devbox.json
+    refresh
+
+    # deactivate devbox
+    exit
     ```
