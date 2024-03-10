@@ -18,7 +18,7 @@ Inspired by [Oklahoma Cooling Centers Python Project](https://github.com/alex-co
   * Ruth/Amanda
 * Clean up
   * Ruth
-* Pipe into folium
+* Pipe into `folium`
   * Crystal
 * Deploy (Netlify? GitHub Pages? Render?)
   * Crystal
