@@ -1,8 +1,11 @@
-import requests
-import pandas as pd
+#!/usr/bin/env python
+
 import folium
+import pandas as pd
+import requests
 
 BASE_URL='https://earthquake.usgs.gov/fdsnws/event/1/query'
+
 
 def get_data():
     payload={'format':'csv', 'catalog':'ok', 'eventtype':'earthquake'}
@@ -13,9 +16,9 @@ def get_data():
     df['time'] = df['time'].dt.tz_convert('US/Central')
     df['date'], df['time'] = df['time'].dt.date, df['time'].dt.time
     return df
-  
 
-if __name__=='__main__':
+
+def main():
     earthquake_df = get_data()
     ok_map = folium.Map(location=[35.4823241,-97.7593895], zoom_start=7)
 
@@ -23,5 +26,9 @@ if __name__=='__main__':
         latF = float(lat)
         lonF = float(lon)
         folium.Marker([latF, lonF], popup=f'<div><p>Date: {date}</p><p>Time: {time}</p><p>Place: {place}</p><p>Mag: {mag}</p></div>', tooltip=place).add_to(ok_map)
-    
-    ok_map.save('pages/index.html')   
+
+    ok_map.save('pages/index.html')
+
+
+if __name__=='__main__':
+    main()
