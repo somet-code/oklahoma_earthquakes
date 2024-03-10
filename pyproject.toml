@@ -1,0 +1,101 @@
+[tool.poetry]
+name = "oklahoma-earthquakes"
+version = "0.1.0"
+description = ""
+authors = [
+    "somet-code <107285420+somet-code@users.noreply.github.com>",
+    "Chenyi Schmidt <53380286+crystalzipzap@users.noreply.github.com>",
+    "waterglider <bulgarianprincess@gmail.com>",
+    "IAmChioma <37625087+IAmChioma@users.noreply.github.com>",
+    "pythoninthegrass <4097471+pythoninthegrass@users.noreply.github.com>"
+]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+branca = "^0.7.1"
+certifi = "^2024.2.2"
+charset-normalizer = "^3.3.2"
+folium = "^0.16.0"
+idna = "^3.6"
+jinja2 = "^3.1.3"
+markupsafe = "^2.1.5"
+numpy = "^1.26.4"
+pandas = "^2.2.1"
+python-dateutil = "^2.9.0.post0"
+pytz = "^2024.1"
+requests = "^2.31.0"
+six = "^1.16.0"
+tzdata = "^2024.1"
+urllib3 = "^2.2.1"
+
+[tool.poetry.group.dev.dependencies]
+coverage = "^7.3.2"
+hypothesis = {extras = ["cli"], version = "^6.88.4"}
+icecream = "^2.1.3"
+ipython = "^8.17.2"
+poetry-plugin-export = "^1.6.0"
+pytest = "^7.4.3"
+pytest-asyncio = "^0.23.3"
+pytest-cov = "^4.1.0"
+pytest-datafiles = "^3.0.0"
+pytest-xdist = "^3.4.0"
+rich = "^13.6.0"
+ruff = "^0.1.5"
+
+[tool.ruff]
+# Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
+select = ["E", "F"]
+ignore = []
+# Skip unused variable rules
+extend-ignore = ["D203", "E203", "E251", "E266", "E401", "E402", "E501", "F401", "F403"]
+
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+fixable = ["A", "B", "C", "D", "E", "F", "G", "I", "N", "Q", "S", "T", "W", "ANN", "ARG", "BLE", "COM", "DJ", "DTZ", "EM", "ERA", "EXE", "FBT", "ICN", "INP", "ISC", "NPY", "PD", "PGH", "PIE", "PL", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "SIM", "SLF", "TCH", "TID", "TRY", "UP", "YTT"]
+unfixable = []
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    "dist",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    "__pycache__",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+
+# Black (default: 88)
+line-length = 130
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+# Assume Python 3.11.
+target-version = "py311"
+
+[tool.ruff.mccabe]
+# Unlike Flake8, default to a complexity level of 10.
+max-complexity = 10
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
