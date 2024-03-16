@@ -8,7 +8,14 @@ from zoneinfo import ZoneInfo
 
 import folium
 
+# env vars
 BASE_URL='https://earthquake.usgs.gov/fdsnws/event/1/query'
+COLORS = {
+    (0.0, 1.0): 'yellow',
+    (1.0, 2.0): 'red',
+    (2.0, 3.0): 'black',
+    (3.0, float('inf')): 'blue'
+}
 
 COLORS = {
     (0, 1): 'lightgray',
