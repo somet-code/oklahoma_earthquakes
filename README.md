@@ -5,52 +5,72 @@ Python project to list and/or visualize locations and details about recent Oklah
 Inspired by [Oklahoma Cooling Centers Python Project](https://github.com/alex-code4okc/oklahoma_cooling_centers_python)
 
 ## Possible dependencies
-* Requests
-* pandas
-* Folium
+
+* `requests`
+* `pandas`
+* `folium`
 
 ## First milestone:
-* Grab last <strike>7</strike> 30 days of Oklahoma earthquakes <strike>as a static csv</strike> DONE
+
+* Grab last ~~7~~ 30 days of Oklahoma earthquakes ~~as a static csv~~ DONE
   * Chioma
-* Read into pandas DataFrame DONE
+* Read into `pandas` DataFrame DONE
   * Ruth/Amanda
 * Clean up
   * Ruth
-* Pipe into Folium
+* Pipe into `folium`
   * Crystal
 * Deploy (Netlify? GitHub Pages? Render?)
   * Crystal
 
 ## Instructions
 
-```shell
-# ****** Mac Terminal ******
-# create virtual environment 
-python3 -m venv .venv
-# activate virtual environment
-source .venv/bin/activate
-# install dependencies
-python3 -m pip install -r requirements.txt
-# run script
-python3 makeMap.py
-# open map in browser
-open ./pages/index.html
-# deactivate virtual environment
-deactivate
+* Install [Python3](https://www.python.org/downloads/)
+* Create a virtual environment and install dependencies
+    ```shell
+    python3 -m venv .venv
+    source .venv/bin/activate
+    python3 -m pip install -r requirements.txt
+    ```
+* Run the script
+    ```shell
+    python3 make_map.py
+    ```
+* Open the map in your browser
+  * macOS
+    ```shell
+    open ./pages/index.html
+    ```
+  * Windows and Linux
+    * Double-click the `index.html` file in your file manager
+* Deactivate virtual environment
+    ```shell
+    deactivate
+    ```
 
+## Development
 
-## ****** Windows ******
-```shell
-# create virtual environment 
-python -m venv .venv
-# activate virtual environment
-venv/bin/activate
-# install dependencies
-python -m pip install -r requirements.txt
-# run script
-python makeMap.py
-# open map in browser
-open ./pages/index.html
-# deactivate virtual environment
-deactivate
-```
+### Setup
+
+* Follow the [instructions](#instructions) above to set up your environment
+* Install [devbox](https://www.jetpack.io/devbox/docs/quickstart/)
+    ```bash
+    curl -fsSL https://get.jetpack.io/devbox | bash
+    ```
+
+### Usage
+
+* Basic commands
+    ```bash
+    # install dependencies
+    devbox install
+
+    # enter devbox
+    devbox shell
+
+    # refresh devbox after making changes to devbox.json
+    refresh
+
+    # deactivate devbox
+    exit
+    ```
