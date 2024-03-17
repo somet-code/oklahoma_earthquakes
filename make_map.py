@@ -7,34 +7,33 @@ import pandas as pd
 
 BASE_URL='https://earthquake.usgs.gov/fdsnws/event/1/query'
 
+COLORS = {
+    (0, 1): 'lightgray',
+    (1, 2): 'blue',
+    (2, 3): 'green',
+    (3, 4): 'purple',
+    (4, 5): 'orange',
+    (5, 6): 'red',
+    (6, float('inf')): 'pink'
+}
+
 def get_data():
     payload={'format':'csv', 'catalog':'ok', 'eventtype':'earthquake'}
     qs = urlencode(payload)
 
-    df =pd.read_csv(f'{BASE_URL}?{qs}', usecols=['latitude', 'longitude', 'place', 'time', 'mag'], header=0)
-    df['time'] = pd.to_datetime(df['time'])
-    df['time'] = df['time'].dt.tz_convert('US/Central')
+    df =pd.read_csv(f'{BASE_URL}?{qs}', usecols=['time','latitude', 'longitude', 'place', 'mag'], header=0)
+    df['time'] = pd.to_datetime(df['time']).dt.tz_convert('US/Central')
     df['date'], df['time'] = df['time'].dt.date, df['time'].dt.time
     return df
 
-def icon_by_magnitude(mag):
-    if mag < 1:
-        color = 'red'
-    elif 1 <= mag < 2:
-        color = 'orange'
-    elif 2 <= mag < 3:
-        color = 'pink'
-    elif 3 <= mag < 4:
-        color = 'green'
-    elif 4 <= mag < 5:
-        color = 'blue'
-    elif 5 <= mag < 6:
-        color = 'purple'
-    elif 6 <= mag:
-        color = 'white'
-    else:
-        color = 'black'
+def assign_color(mag):
+    for range_, color in COLORS.items():
+        if range_[0] <= mag < range_[1]:
+            return color
+    return 'white'
 
+def custom_icon(mag):
+    color = assign_color(mag)
     return folium.Icon(color=color)
 
 def add_markers(df, map):
@@ -42,7 +41,7 @@ def add_markers(df, map):
     for place, mag, lat, lon, date, time in zip(df['place'], df['mag'], df['latitude'], df['longitude'], df['date'], df['time']):
         latF = float(lat)
         lonF = float(lon)
-        icon = icon_by_magnitude(mag)
+        icon = custom_icon(mag)
         folium.Marker([latF, lonF],icon=icon, popup=f'<div><p>Date: {date}</p><p>Time: {time}</p><p>Place: {place}</p><p>Mag: {mag}</p></div>', tooltip=place).add_to(map)
         folium.Marker([latF, lonF])
 
