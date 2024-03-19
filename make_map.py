@@ -32,21 +32,24 @@ def assign_color(mag):
             return color
     return 'white'
 
-def custom_icon(mag):
+def make_custom_icon(mag):
     color = assign_color(mag)
     return folium.Icon(color=color)
 
-def add_markers(df, map):
-    # TODO: Fix zip
-    for place, mag, lat, lon, date, time in zip(df['place'], df['mag'], df['latitude'], df['longitude'], df['date'], df['time']):
-        latF = float(lat)
-        lonF = float(lon)
-        icon = custom_icon(mag)
-        folium.Marker([latF, lonF],icon=icon, popup=f'<div><p>Date: {date}</p><p>Time: {time}</p><p>Place: {place}</p><p>Mag: {mag}</p></div>', tooltip=place).add_to(map)
-        folium.Marker([latF, lonF])
+def make_custom_marker(s):
+    icon = make_custom_icon(s['mag'])
+    return folium.Marker([s['latitude'], s['longitude']], icon=icon, popup=f"<div><p>Date: {s['date']}</p><p>Time: {s['time']}</p><p>Place: {s['place']}</p><p>Mag: {s['mag']}</p></div>", tooltip=s['place'])
+
+def setup_markers(df):
+    df['marker'] = df.apply(make_custom_marker, axis=1)
+
+def add_markers(df, fmap):
+    for marker in df['marker']:
+        marker.add_to(fmap)
 
 def main():
     earthquake_df = get_data()
+    setup_markers(earthquake_df)
     ok_map = folium.Map(location=[35.4823241,-97.7593895], zoom_start=7)
     add_markers(earthquake_df, ok_map)
     ok_map.save('pages/index.html')
