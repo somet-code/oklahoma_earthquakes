@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 
+from datetime import datetime
+import json
 from urllib.parse import urlencode
+from urllib.request import urlopen
+from zoneinfo import ZoneInfo
 
 import folium
-import pandas as pd
 
 BASE_URL='https://earthquake.usgs.gov/fdsnws/event/1/query'
 
@@ -17,41 +20,50 @@ COLORS = {
     (6, float('inf')): 'pink'
 }
 
-def get_data():
-    payload={'format':'csv', 'catalog':'ok', 'eventtype':'earthquake'}
-    qs = urlencode(payload)
-
-    df =pd.read_csv(f'{BASE_URL}?{qs}', usecols=['time','latitude', 'longitude', 'place', 'mag'], header=0)
-    df['time'] = pd.to_datetime(df['time']).dt.tz_convert('US/Central')
-    df['date'], df['time'] = df['time'].dt.date, df['time'].dt.time
-    return df
-
-def assign_color(mag):
+def assign_color_by_mag(mag):
     for range_, color in COLORS.items():
         if range_[0] <= mag < range_[1]:
             return color
     return 'white'
 
-def make_custom_icon(mag):
-    color = assign_color(mag)
-    return folium.Icon(color=color)
+def convert_epoch_to_central(time):
+    dt = datetime.fromtimestamp(time/1000, tz=ZoneInfo('America/Chicago'))
+    return dt.strftime('%d %b %Y %I:%M%p')
 
-def make_custom_marker(s):
-    icon = make_custom_icon(s['mag'])
-    return folium.Marker([s['latitude'], s['longitude']], icon=icon, popup=f"<div><p>Date: {s['date']}</p><p>Time: {s['time']}</p><p>Place: {s['place']}</p><p>Mag: {s['mag']}</p></div>", tooltip=s['place'])
+def get_earthquakes():
+    payload={'format':'geojson', 'catalog':'ok', 'eventtype':'earthquake'}
+    qs = urlencode(payload)
+    
+    response = urlopen(f'{BASE_URL}?{qs}')
+    js = json.loads(response.read())
 
-def setup_markers(df):
-    df['marker'] = df.apply(make_custom_marker, axis=1)
+    for feature in js['features']:
+        feature['properties']['time'] = convert_epoch_to_central(feature['properties']['time'])
 
-def add_markers(df, fmap):
-    for marker in df['marker']:
-        marker.add_to(fmap)
+    return js
 
 def main():
-    earthquake_df = get_data()
-    setup_markers(earthquake_df)
+    quakes = get_earthquakes()
+
     ok_map = folium.Map(location=[35.4823241,-97.7593895], zoom_start=7)
-    add_markers(earthquake_df, ok_map)
+
+    folium.GeoJson(quakes,
+               marker=folium.CircleMarker(),
+               popup=folium.GeoJsonPopup(fields=['time','mag','place'],
+                                         aliases=['Time','Magnitude','Location']
+                                        ),
+               tooltip=folium.GeoJsonTooltip(fields=['time','mag','place'],
+                                         aliases=['Time','Magnitude','Location']
+                                        ),
+               style_function = lambda feature: {
+                   'color': 'black',
+                   'weight': 1,
+                   'radius': feature['properties']['mag']*3.5,
+                   'fill': True,
+                   'fillColor': assign_color_by_mag(feature['properties']['mag'])
+               }
+              ).add_to(ok_map)
+
     ok_map.save('pages/index.html')
 
 if __name__=='__main__':
