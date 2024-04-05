@@ -6,7 +6,7 @@ from urllib.parse import urlencode
 from urllib.request import urlopen
 from zoneinfo import ZoneInfo
 
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 import folium
 
 app = Flask(__name__)
@@ -45,10 +45,11 @@ def get_earthquakes():
 
     return js
 
-def main():
+@app.route('/map')
+def make_earthquake_map():
     quakes = get_earthquakes()
 
-    ok_map = folium.Map(location=[35.4823241,-97.7593895], zoom_start=7)
+    ok_map = folium.Map(location=[35.4823241,-98.7], zoom_start=7)
 
     folium.GeoJson(quakes,
                marker=folium.CircleMarker(),
@@ -67,12 +68,15 @@ def main():
                }
               ).add_to(ok_map)
 
-    ok_map.save('templates/index.html')
+    ok_map.save('templates/map.html')
+
+    return render_template('map.html')
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    iframe = url_for('make_earthquake_map')
+
+    return render_template('index.html', iframe=iframe)
 
 if __name__=='__main__':
-    main()
-    app.run()
+    app.run(debug=True)
