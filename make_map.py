@@ -6,7 +6,10 @@ from urllib.parse import urlencode
 from urllib.request import urlopen
 from zoneinfo import ZoneInfo
 
+from flask import Flask, render_template
 import folium
+
+app = Flask(__name__)
 
 BASE_URL='https://earthquake.usgs.gov/fdsnws/event/1/query'
 
@@ -64,7 +67,12 @@ def main():
                }
               ).add_to(ok_map)
 
-    ok_map.save('pages/index.html')
+    ok_map.save('templates/index.html')
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 if __name__=='__main__':
     main()
+    app.run()
