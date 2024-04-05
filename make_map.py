@@ -49,7 +49,7 @@ def get_earthquakes():
 def make_earthquake_map():
     quakes = get_earthquakes()
 
-    ok_map = folium.Map(location=[35.4823241,-98.7], zoom_start=7)
+    ok_map = folium.Map(location=[35.5,-98.7], zoom_start=7)
 
     folium.GeoJson(quakes,
                marker=folium.CircleMarker(),
@@ -74,6 +74,8 @@ def make_earthquake_map():
 
 @app.route('/')
 def index():
+    make_earthquake_map()
+    
     iframe = url_for('make_earthquake_map')
 
     return render_template('index.html', iframe=iframe)
