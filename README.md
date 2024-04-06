@@ -4,24 +4,10 @@ Python project to list and/or visualize locations and details about recent Oklah
 
 Inspired by [Oklahoma Cooling Centers Python Project](https://github.com/alex-code4okc/oklahoma_cooling_centers_python)
 
-## Possible dependencies
+## Dependencies
 
-* `requests`
-* `pandas`
 * `folium`
-
-## First milestone:
-
-* Grab last ~~7~~ 30 days of Oklahoma earthquakes ~~as a static csv~~ DONE
-  * Chioma
-* Read into `pandas` DataFrame DONE
-  * Ruth/Amanda
-* Clean up
-  * Ruth
-* Pipe into `folium`
-  * Crystal
-* Deploy (Netlify? GitHub Pages? Render?)
-  * Crystal
+* `flask`
 
 ## Instructions
 
