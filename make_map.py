@@ -45,7 +45,6 @@ def get_earthquakes():
 
     return js
 
-@app.route('/map')
 def make_earthquake_map():
     quakes = get_earthquakes()
 
@@ -68,16 +67,12 @@ def make_earthquake_map():
                }
               ).add_to(ok_map)
 
-    ok_map.save('templates/map.html')
-
-    return render_template('map.html')
+    return ok_map.get_root().render()
 
 @app.route('/')
 def index():
-    make_earthquake_map()
+    iframe = make_earthquake_map()
     
-    iframe = url_for('make_earthquake_map')
-
     return render_template('index.html', iframe=iframe)
 
 if __name__=='__main__':
