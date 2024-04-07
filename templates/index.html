@@ -3,6 +3,14 @@
 {% block content %}
 <h1>Wow earthquakes</h1>
 <div style="display: flex; justify-content: center">
+    <form method="POST" action="/">
+        {{ form.csrf_token }}
+        {{ form.startday.label }} {{ form.startday }}
+        {{ form.minmag.label }} {{ form.minmag }}
+        {{ form.submit }}
+    </form>
+</div>
+<div style="display: flex; justify-content: center">
     <iframe srcdoc="{{ iframe }}" title="Oklahoma Earthquakes" width="900" height="600"></iframe>
 </div>
 {% endblock %}

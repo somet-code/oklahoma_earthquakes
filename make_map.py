@@ -6,10 +6,15 @@ from urllib.parse import urlencode
 from urllib.request import urlopen
 from zoneinfo import ZoneInfo
 
-from flask import Flask, render_template, url_for
+from flask import Flask, redirect, render_template, url_for
+from flask_wtf import FlaskForm
+from wtforms import SelectField, SubmitField
 import folium
 
 app = Flask(__name__)
+
+app.config['SECRET_KEY'] = 'mysecretkey'
+
 
 BASE_URL='https://earthquake.usgs.gov/fdsnws/event/1/query'
 
@@ -23,6 +28,17 @@ COLORS = {
     (6, float('inf')): 'pink'
 }
 
+class EarthquakeForm(FlaskForm):
+    startday = SelectField('Days before present',
+                           choices=[(1,1), (2,2), (3,3), (4,4), (5,5), (6,6), (7,7)],
+                           coerce=int
+                           )
+    minmag = SelectField('Minimum magnitude',
+                         choices=[(0,0), (1,1), (2,2), (3,3), (4,4), (5,5)],
+                         coerce=int
+                         )
+    submit = SubmitField('Get earthquakes')
+
 def assign_color_by_mag(mag):
     for range_, color in COLORS.items():
         if range_[0] <= mag < range_[1]:
@@ -33,8 +49,7 @@ def convert_epoch_to_central(time):
     dt = datetime.fromtimestamp(time/1000, tz=ZoneInfo('America/Chicago'))
     return dt.strftime('%d %b %Y %I:%M%p')
 
-def get_earthquakes(state='ok', starttime=date.today()-timedelta(30), minmagnitude=0):
-    print(starttime)
+def get_earthquakes(state='ok', starttime=date.today()-timedelta(7), minmagnitude=0):
     payload={'format': 'geojson',
              'catalog': state,
              'starttime': starttime,
@@ -50,8 +65,8 @@ def get_earthquakes(state='ok', starttime=date.today()-timedelta(30), minmagnitu
 
     return js
 
-def make_earthquake_map():
-    quakes = get_earthquakes()
+def make_earthquake_map(state='ok', starttime=date.today()-timedelta(7), minmagnitude=0):
+    quakes = get_earthquakes(state, starttime, minmagnitude)
 
     ok_map = folium.Map(location=[35.5,-98.7], zoom_start=7)
 
@@ -74,11 +89,19 @@ def make_earthquake_map():
 
     return ok_map.get_root().render()
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
+    form = EarthquakeForm(startday=7, minmag=0)
+
     iframe = make_earthquake_map()
+
+    if form.validate_on_submit():
+        iframe = make_earthquake_map(starttime=date.today()-timedelta(form.startday.data),
+                                     minmagnitude=form.minmag.data
+                                     )
+        #form = EarthquakeForm(formdata=None)
     
-    return render_template('index.html', iframe=iframe)
+    return render_template('index.html', form=form, iframe=iframe)
 
 if __name__=='__main__':
     app.run(debug=True)
