@@ -52,14 +52,13 @@ Inspired by [Oklahoma Cooling Centers Python Project](https://github.com/alex-co
 
 ### Setup
 
+### Devbox
+
 * Follow the [instructions](#instructions) above to set up your environment
 * Install [devbox](https://www.jetpack.io/devbox/docs/quickstart/)
     ```bash
     curl -fsSL https://get.jetpack.io/devbox | bash
     ```
-
-### Usage
-
 * Basic commands
     ```bash
     # install dependencies
@@ -73,4 +72,27 @@ Inspired by [Oklahoma Cooling Centers Python Project](https://github.com/alex-co
 
     # deactivate devbox
     exit
+    ```
+
+### Pre-commit hooks
+
+* Install [pre-commit](https://pre-commit.com/#install)
+    ```bash
+    # python
+    python3 -m pip install pre-commit
+
+    # homebrew
+    brew install pre-commit
+    ```
+* Install pre-commit hooks
+    ```bash
+    pre-commit install
+    ```
+* Run pre-commit hooks
+    ```bash
+    pre-commit run --all-files
+    ```
+* Skip pre-commit hooks
+    ```bash
+    git commit -m "commit message" --no-verify
     ```
