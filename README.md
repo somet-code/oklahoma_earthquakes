@@ -50,8 +50,6 @@ Inspired by [Oklahoma Cooling Centers Python Project](https://github.com/alex-co
 
 ## Development
 
-### Setup
-
 ### Devbox
 
 * Follow the [instructions](#instructions) above to set up your environment
