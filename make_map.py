@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from datetime import datetime
+from datetime import date, datetime, timedelta
 import json
 from urllib.parse import urlencode
 from urllib.request import urlopen
@@ -33,8 +33,13 @@ def convert_epoch_to_central(time):
     dt = datetime.fromtimestamp(time/1000, tz=ZoneInfo('America/Chicago'))
     return dt.strftime('%d %b %Y %I:%M%p')
 
-def get_earthquakes():
-    payload={'format':'geojson', 'catalog':'ok', 'eventtype':'earthquake'}
+def get_earthquakes(state='ok', starttime=date.today()-timedelta(30), minmagnitude=0):
+    print(starttime)
+    payload={'format': 'geojson',
+             'catalog': state,
+             'starttime': starttime,
+             'minmagnitude': minmagnitude,
+             'eventtype': 'earthquake'}
     qs = urlencode(payload)
     
     response = urlopen(f'{BASE_URL}?{qs}')

@@ -22,13 +22,7 @@ Inspired by [Oklahoma Cooling Centers Python Project](https://github.com/alex-co
     ```shell
     python3 make_map.py
     ```
-* Open the map in your browser
-  * macOS
-    ```shell
-    open ./pages/index.html
-    ```
-  * Windows and Linux
-    * Double-click the `index.html` file in your file manager
+* Open the map in your browser at http://127.0.0.1:5000
 * Deactivate virtual environment
     ```shell
     deactivate
