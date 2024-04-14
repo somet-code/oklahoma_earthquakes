@@ -30,6 +30,7 @@ six = "^1.16.0"
 tzdata = "^2024.1"
 urllib3 = "^2.2.1"
 flask = "^3.0.2"
+flask-wtf = "^1.2.1"
 
 [tool.poetry.group.dev.dependencies]
 coverage = "^7.4.4"
