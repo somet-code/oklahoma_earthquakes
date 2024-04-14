@@ -99,7 +99,6 @@ def index():
         iframe = make_earthquake_map(starttime=date.today()-timedelta(form.startday.data),
                                      minmagnitude=form.minmag.data
                                      )
-        #form = EarthquakeForm(formdata=None)
     
     return render_template('index.html', form=form, iframe=iframe)
 
