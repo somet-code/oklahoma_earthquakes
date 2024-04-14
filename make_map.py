@@ -1,15 +1,14 @@
 #!/usr/bin/env python
 
-from datetime import date, datetime, timedelta
+import folium
 import json
-from urllib.parse import urlencode
-from urllib.request import urlopen
-from zoneinfo import ZoneInfo
-
+from datetime import date, datetime, timedelta
 from flask import Flask, redirect, render_template, url_for
 from flask_wtf import FlaskForm
+from urllib.parse import urlencode
+from urllib.request import urlopen
 from wtforms import SelectField, SubmitField
-import folium
+from zoneinfo import ZoneInfo
 
 app = Flask(__name__)
 
@@ -56,7 +55,7 @@ def get_earthquakes(state='ok', starttime=date.today()-timedelta(7), minmagnitud
              'minmagnitude': minmagnitude,
              'eventtype': 'earthquake'}
     qs = urlencode(payload)
-    
+
     response = urlopen(f'{BASE_URL}?{qs}')
     js = json.loads(response.read())
 
@@ -99,7 +98,7 @@ def index():
         iframe = make_earthquake_map(starttime=date.today()-timedelta(form.startday.data),
                                      minmagnitude=form.minmag.data
                                      )
-    
+
     return render_template('index.html', form=form, iframe=iframe)
 
 if __name__=='__main__':
