@@ -10,7 +10,8 @@
     "gnumake@latest",
     "go-task@latest",
     "nodejs@21.4.0",
-    "openssl@latest"
+    "openssl@latest",
+    "pre-commit"
   ],
   "env": {
     "VENV_DIR": ".venv"
