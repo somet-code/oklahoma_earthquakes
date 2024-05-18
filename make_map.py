@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
 import folium
+import geojson
 import json
 from datetime import date, datetime, timedelta
 from flask import Flask, redirect, render_template, url_for
 from flask_wtf import FlaskForm
 from urllib.parse import urlencode
 from urllib.request import urlopen
-from wtforms import SelectField, SubmitField
+from wtforms import BooleanField, SelectField, SubmitField
 from zoneinfo import ZoneInfo
 
 app = Flask(__name__)
@@ -36,6 +37,7 @@ class EarthquakeForm(FlaskForm):
                          choices=[(0,0), (1,1), (2,2), (3,3), (4,4), (5,5)],
                          coerce=int
                          )
+    wells_overlay = BooleanField('Overlay UIC well sites')
     submit = SubmitField('Get earthquakes')
 
 def assign_color_by_mag(mag):
@@ -59,44 +61,58 @@ def get_earthquakes(state='ok', starttime=date.today()-timedelta(7), minmagnitud
     response = urlopen(f'{BASE_URL}?{qs}')
     js = json.loads(response.read())
 
+    # Check if there are nonzero earthquakes
+    if not bool(js['metadata']['count']):
+        return
+
     for feature in js['features']:
         feature['properties']['time'] = convert_epoch_to_central(feature['properties']['time'])
 
     return js
 
-def make_earthquake_map(state='ok', starttime=date.today()-timedelta(7), minmagnitude=0):
+def make_earthquake_map(state='ok', starttime=date.today()-timedelta(7), minmagnitude=0, wells_overlay=False):
     quakes = get_earthquakes(state, starttime, minmagnitude)
 
     ok_map = folium.Map(location=[35.5,-98.7], zoom_start=7)
 
-    folium.GeoJson(quakes,
-               marker=folium.CircleMarker(),
-               popup=folium.GeoJsonPopup(fields=['time','mag','place'],
-                                         aliases=['Time','Magnitude','Location']
-                                        ),
-               tooltip=folium.GeoJsonTooltip(fields=['time','mag','place'],
-                                         aliases=['Time','Magnitude','Location']
-                                        ),
-               style_function = lambda feature: {
-                   'color': 'black',
-                   'weight': 1,
-                   'radius': feature['properties']['mag']*3.5,
-                   'fill': True,
-                   'fillColor': assign_color_by_mag(feature['properties']['mag'])
-               }
-              ).add_to(ok_map)
+    if wells_overlay:
+        with open('UIC_WELLS.geojson') as f:
+            gj = geojson.load(f)
+
+        folium.GeoJson(gj,
+            marker=folium.Circle(),
+            ).add_to(ok_map)
+
+    if quakes:
+        folium.GeoJson(quakes,
+                marker=folium.CircleMarker(),
+                popup=folium.GeoJsonPopup(fields=['time','mag','place'],
+                                            aliases=['Time','Magnitude','Location']
+                                            ),
+                tooltip=folium.GeoJsonTooltip(fields=['time','mag','place'],
+                                            aliases=['Time','Magnitude','Location']
+                                            ),
+                style_function = lambda feature: {
+                    'color': 'black',
+                    'weight': 1,
+                    'radius': feature['properties']['mag']*3.5,
+                    'fill': True,
+                    'fillColor': assign_color_by_mag(feature['properties']['mag'])
+                }
+                ).add_to(ok_map)
 
     return ok_map.get_root().render()
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    form = EarthquakeForm(startday=7, minmag=0)
+    form = EarthquakeForm(startday=7, minmag=0, wells_overlay=False)
 
     iframe = make_earthquake_map()
 
     if form.validate_on_submit():
         iframe = make_earthquake_map(starttime=date.today()-timedelta(form.startday.data),
-                                     minmagnitude=form.minmag.data
+                                     minmagnitude=form.minmag.data,
+                                     wells_overlay=form.wells_overlay.data,
                                      )
 
     return render_template('index.html', form=form, iframe=iframe)
