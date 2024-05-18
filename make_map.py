@@ -70,17 +70,23 @@ def get_earthquakes(state='ok', starttime=date.today()-timedelta(7), minmagnitud
 
     return js
 
+def load_wells_data():
+    print('Loading wells data')
+    global gj
+    with open('UIC_WELLS.geojson') as f:
+        gj = geojson.load(f)
+
 def make_earthquake_map(state='ok', starttime=date.today()-timedelta(7), minmagnitude=0, wells_overlay=False):
     quakes = get_earthquakes(state, starttime, minmagnitude)
 
     ok_map = folium.Map(location=[35.5,-98.7], zoom_start=7)
 
     if wells_overlay:
-        with open('UIC_WELLS.geojson') as f:
-            gj = geojson.load(f)
+        if 'gj' not in globals():
+            load_wells_data()
 
         folium.GeoJson(gj,
-            marker=folium.Circle(),
+            marker=folium.Circle(color='lightgray'),
             ).add_to(ok_map)
 
     if quakes:
